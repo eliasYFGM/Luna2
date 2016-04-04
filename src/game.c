@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <allegro5/allegro.h>
-#include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_audio.h>
@@ -81,12 +80,6 @@ int game_init(struct Game_Config* config)
     if (!al_install_mouse())
     {
         puts("ERROR: Could not initialize the mouse...");
-        return 0;
-    }
-
-    if (!al_init_primitives_addon())
-    {
-        puts("ERROR: Could not initialize primitives addon...");
         return 0;
     }
 
