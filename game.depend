@@ -1,8 +1,7 @@
 # depslib dependency file v1.0
-1459622256 source:/home/elias/Proyectos/Luna/src/game.c
+1459798400 source:/home/elias/Proyectos/Luna/src/game.c
 	<stdio.h>
 	<allegro5/allegro.h>
-	<allegro5/allegro_primitives.h>
 	<allegro5/allegro_image.h>
 	<allegro5/allegro_font.h>
 	<allegro5/allegro_audio.h>
@@ -24,7 +23,7 @@
 1459741282 /home/elias/Proyectos/Luna/src/gamestate.h
 	"state.h"
 
-1459745628 source:/home/elias/Proyectos/Luna/src/gamestate.c
+1459797108 source:/home/elias/Proyectos/Luna/src/gamestate.c
 	<stdio.h>
 	<stdlib.h>
 	<allegro5/allegro.h>
@@ -61,4 +60,6 @@
 	"game.h"
 
 1459741282 /home/elias/Proyectos/Luna/src/player.h
+
+1459556768 source:/home/elias/Proyectos/Luna/src/resource.rc
 
