@@ -10,7 +10,7 @@
 #include "deadstate.h"
 #include "player.h"
 
-struct Tile* vtiles[374];
+struct Tile* vtiles[500];
 int vtile_count = 0;
 
 struct Keys keys = { 0, 0, 0, 0 };
@@ -91,15 +91,19 @@ static void on_init(void* param)
     data.text = al_load_bitmap("data/text.tga");
 
     data.music1 = al_load_audio_stream("data/music1.ogg", 2, 4096);
-    al_attach_audio_stream_to_mixer(data.music1, al_get_default_mixer());
-    al_set_audio_stream_playmode(data.music1, ALLEGRO_PLAYMODE_LOOP);
 
-    // Loop points for the music
-    al_set_audio_stream_loop_secs(data.music1, 20.274,
-        al_get_audio_stream_length_secs(data.music1));
+    if (data.music1 != NULL)
+    {
+        al_attach_audio_stream_to_mixer(data.music1, al_get_default_mixer());
+        al_set_audio_stream_playmode(data.music1, ALLEGRO_PLAYMODE_LOOP);
 
-    // Play it
-    al_set_audio_stream_playing(data.music1, 1);
+        // Loop points for the music
+        al_set_audio_stream_loop_secs(data.music1, 20.274,
+            al_get_audio_stream_length_secs(data.music1));
+
+        // Play it
+        al_set_audio_stream_playing(data.music1, 1);
+    }
 
     player_init();
 }
@@ -111,7 +115,11 @@ static void on_end()
     al_destroy_bitmap(data.tilesred);
     al_destroy_bitmap(data.cracks);
     al_destroy_bitmap(data.text);
-    al_destroy_audio_stream(data.music1);
+
+    if (data.music1 != NULL)
+    {
+        al_destroy_audio_stream(data.music1);
+    }
 
     free(tile_list);
 
@@ -185,8 +193,8 @@ static void on_update()
 
     for (i=0; i<tile_count; ++i)
     {
-        if (tile_list[i].x < (view_x + 640)
-            && tile_list[i].x > (view_x - tile_list[i].w))
+        if (tile_list[i].x < (view_x + (640 + tile_list[i].w))
+            && tile_list[i].x > (view_x - (tile_list[i].w * 2)))
         {
             vtiles[vtile_count++] = &tile_list[i];
         }
@@ -216,41 +224,37 @@ static void on_draw()
         }
     }
 
-    for (i=0; i<tile_count; ++i)
+    for (i=0; i<vtile_count; ++i)
     {
-        if (tile_list[i].x < (view_x + 640)
-            && tile_list[i].x > (view_x - tile_list[i].w))
+        al_draw_bitmap_region(creepy ? data.tilesred : data.tiles,
+            vtiles[i]->left,
+            vtiles[i]->top,
+            vtiles[i]->w,
+            vtiles[i]->h,
+            vtiles[i]->x - view_x,
+            vtiles[i]->y - view_y,
+        0);
+
+        al_draw_bitmap(data.text, 257 - view_x, 289, 0);
+
+        if (creepy)
         {
-            al_draw_bitmap_region(creepy ? data.tilesred : data.tiles,
-                tile_list[i].left,
-                tile_list[i].top,
-                tile_list[i].w,
-                tile_list[i].h,
-                tile_list[i].x - view_x,
-                tile_list[i].y - view_y,
+            al_draw_bitmap_region(data.cracks,
+                416, 0, 32, 32,
+                vtiles[i]->x - view_x,
+                vtiles[i]->y - view_y,
             0);
+        }
+        else
+        {
+            // Automatically adjust the 'cracking level'
+            int cl = (int) (view_x / 448) * 32;
 
-            al_draw_bitmap(data.text, 257 - view_x, 289, 0);
-
-            if (creepy)
-            {
-                al_draw_bitmap_region(data.cracks,
-                    416, 0, 32, 32,
-                    tile_list[i].x - view_x,
-                    tile_list[i].y - view_y,
-                0);
-            }
-            else
-            {
-                // Automatically adjust the 'cracking level'
-                int cl = (int) (view_x / 448) * 32;
-
-                al_draw_bitmap_region(data.cracks,
-                    cl, 0, 32, 32,
-                    tile_list[i].x - view_x,
-                    tile_list[i].y - view_y,
-                0);
-            }
+            al_draw_bitmap_region(data.cracks,
+                cl, 0, 32, 32,
+                vtiles[i]->x - view_x,
+                vtiles[i]->y - view_y,
+            0);
         }
     }
 
