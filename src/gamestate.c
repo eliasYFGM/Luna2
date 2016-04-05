@@ -36,8 +36,8 @@ static struct // Data
 }
 data;
 
-static int step_count = 0;
 static int crack_level = 0;
+static int step_count = 0;
 static int rush = 0;
 
 // Level width
@@ -191,7 +191,7 @@ static void on_events(ALLEGRO_EVENT* event)
         }
     }
 
-    if (creepy && keys.run)
+    if (creepy)
     {
         keys.run = 0;
     }
@@ -226,6 +226,7 @@ static void on_update()
             {
                 ++crack_level;
 
+                // scarestate may appear quicker than normal...
                 if (rand() % 9 == 1 && view_x > 1000)
                 {
                     rush = 1;
@@ -235,6 +236,7 @@ static void on_update()
 
         if (crack_level >= 13)
         {
+            al_set_audio_stream_playing(data.music1, 0);
             push_state(SCARE_STATE, NULL);
             creepy = 1;
             crack_level = 14;

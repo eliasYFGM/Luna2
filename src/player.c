@@ -71,7 +71,7 @@ void player_update()
     {
         pos.dir = 0;
 
-        if (view_y < 480)
+        if (pos.y < 480)
         {
             pos.x -= keys.run ? 8 : 4;
         }
@@ -85,7 +85,7 @@ void player_update()
     {
         pos.dir = 1;
 
-        if (view_y < 480)
+        if (pos.y < 480)
         {
             pos.x += keys.run ? 8 : 4;
         }
