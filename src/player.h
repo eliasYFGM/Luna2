@@ -6,4 +6,6 @@ void player_end();
 void player_update();
 void player_draw();
 
+extern int go_down;
+
 #endif // PLAYER_H_INCLUDED

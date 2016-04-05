@@ -2,6 +2,7 @@
 #include "player.h"
 #include "game.h"
 #include "gamestate.h"
+#include "deadstate.h"
 
 static struct // Player position
 {
@@ -24,6 +25,8 @@ static struct // Sprite data
     int frame;
 }
 spr;
+
+int go_down = 0;
 
 // Checks for a tile using current position and width/height
 static struct Tile* check_tile(float x, float y)
@@ -67,7 +70,11 @@ void player_update()
     if (keys.left)
     {
         pos.dir = 0;
-        pos.x -= keys.run ? 8 : 4;
+
+        if (view_y < 480)
+        {
+            pos.x -= keys.run ? 8 : 4;
+        }
 
         while (check_tile(0, 0))
         {
@@ -77,7 +84,11 @@ void player_update()
     else if (keys.right)
     {
         pos.dir = 1;
-        pos.x += keys.run ? 8 : 4;
+
+        if (view_y < 480)
+        {
+            pos.x += keys.run ? 8 : 4;
+        }
 
         while (check_tile(0, 0))
         {
@@ -100,11 +111,9 @@ void player_update()
 
     pos.y += pos.yspeed;
 
-    if (pos.y > 480)
+    if (pos.y > 5555)
     {
-        pos.x = 100;
-        pos.y = 100;
-        pos.yspeed = 0;
+        change_state(DEAD_STATE, NULL);
     }
 
     // Stop Luna when overlapping with tiles
@@ -139,15 +148,23 @@ void player_update()
     }
 
     // Update camera
-    while (pos.x < view_x + 200)
+    while (pos.x < view_x + 270)
 	{
 		--view_x;
 	}
 
-	while (pos.x > view_x + 350)
+	while (pos.x > view_x + 320)
 	{
 		++view_x;
 	}
+
+	if (go_down && view_x > 5555)
+	{
+        while (pos.y > view_y + 222)
+        {
+            ++view_y;
+        }
+    }
 }
 
 void player_draw()

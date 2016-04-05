@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_audio.h>
 #include "game.h"
@@ -34,6 +35,10 @@ static struct // Data
     ALLEGRO_AUDIO_STREAM* music2;
 }
 data;
+
+static int step_count = 0;
+static int crack_level = 0;
+static int rush = 0;
 
 // Level width
 static int max_width = 0;
@@ -104,6 +109,8 @@ static void on_init(void* param)
         // Play it
         al_set_audio_stream_playing(data.music1, 1);
     }
+
+    srand(time(NULL));
 
     player_init();
 }
@@ -183,6 +190,11 @@ static void on_events(ALLEGRO_EVENT* event)
             keys.run = 0;
         }
     }
+
+    if (creepy && keys.run)
+    {
+        keys.run = 0;
+    }
 }
 
 static void on_update()
@@ -197,6 +209,40 @@ static void on_update()
             && tile_list[i].x > (view_x - (tile_list[i].w * 2)))
         {
             vtiles[vtile_count++] = &tile_list[i];
+        }
+    }
+
+    if ((keys.left || keys.right) && view_x > 640 && !creepy)
+    {
+        if (rush)
+        {
+            ++crack_level;
+        }
+        else
+        {
+            ++step_count;
+
+            if ((step_count % 100) < 2)
+            {
+                ++crack_level;
+
+                if (rand() % 9 == 1 && view_x > 1000)
+                {
+                    rush = 1;
+                }
+            }
+        }
+
+        if (crack_level >= 13)
+        {
+            push_state(SCARE_STATE, NULL);
+            creepy = 1;
+            crack_level = 14;
+            keys.left = 0;
+            keys.right = 0;
+            keys.run = 0;
+            keys.jump = 0;
+            go_down = 1;
         }
     }
 
@@ -247,11 +293,8 @@ static void on_draw()
         }
         else
         {
-            // Automatically adjust the 'cracking level'
-            int cl = (int) (view_x / 448) * 32;
-
             al_draw_bitmap_region(data.cracks,
-                cl, 0, 32, 32,
+                crack_level * 32, 0, 32, 32,
                 vtiles[i]->x - view_x,
                 vtiles[i]->y - view_y,
             0);

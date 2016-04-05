@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1459798400 source:/home/elias/Proyectos/Luna/src/game.c
+1459895436 source:/home/elias/Proyectos/Luna/src/game.c
 	<stdio.h>
 	<allegro5/allegro.h>
 	<allegro5/allegro_image.h>
@@ -9,23 +9,24 @@
 	"game.h"
 	"state.h"
 
-1459611312 /home/elias/Proyectos/Luna/src/game.h
+1459820087 /home/elias/Proyectos/Luna/src/game.h
 	<allegro5/allegro_font.h>
 
-1459556768 /home/elias/Proyectos/Luna/src/state.h
+1459820087 /home/elias/Proyectos/Luna/src/state.h
 	<allegro5/allegro.h>
 
-1459745702 source:/home/elias/Proyectos/Luna/src/main.c
+1459896116 source:/home/elias/Proyectos/Luna/src/main.c
 	<stdio.h>
 	"game.h"
 	"gamestate.h"
 
-1459741282 /home/elias/Proyectos/Luna/src/gamestate.h
+1459820087 /home/elias/Proyectos/Luna/src/gamestate.h
 	"state.h"
 
-1459797108 source:/home/elias/Proyectos/Luna/src/gamestate.c
+1459898184 source:/home/elias/Proyectos/Luna/src/gamestate.c
 	<stdio.h>
 	<stdlib.h>
+	<time.h>
 	<allegro5/allegro.h>
 	<allegro5/allegro_audio.h>
 	"game.h"
@@ -34,32 +35,33 @@
 	"deadstate.h"
 	"player.h"
 
-1459745628 source:/home/elias/Proyectos/Luna/src/player.c
+1459898099 source:/home/elias/Proyectos/Luna/src/player.c
 	<allegro5/allegro.h>
 	"player.h"
 	"game.h"
 	"gamestate.h"
+	"deadstate.h"
 
-1459612488 /home/elias/Proyectos/Luna/src/scarestate.h
+1459820087 /home/elias/Proyectos/Luna/src/scarestate.h
 	"state.h"
 
-1459745154 source:/home/elias/Proyectos/Luna/src/scarestate.c
+1459820087 source:/home/elias/Proyectos/Luna/src/scarestate.c
 	<allegro5/allegro.h>
 	<allegro5/allegro_audio.h>
 	"scarestate.h"
 	"game.h"
 
-1459618716 /home/elias/Proyectos/Luna/src/deadstate.h
+1459820087 /home/elias/Proyectos/Luna/src/deadstate.h
 	"state.h"
 
-1459744161 source:/home/elias/Proyectos/Luna/src/deadstate.c
+1459820087 source:/home/elias/Proyectos/Luna/src/deadstate.c
 	<allegro5/allegro.h>
 	<allegro5/allegro_primitives.h>
 	<allegro5/allegro_audio.h>
 	"deadstate.h"
 	"game.h"
 
-1459741282 /home/elias/Proyectos/Luna/src/player.h
+1459897805 /home/elias/Proyectos/Luna/src/player.h
 
 1459556768 source:/home/elias/Proyectos/Luna/src/resource.rc
 

@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
         // Framerate (FPS)
         30,
         // Want full-screen?
-        1,
+        0,
         // Want audio module?
         1
     };
