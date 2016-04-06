@@ -111,11 +111,6 @@ void player_update()
 
     pos.y += pos.yspeed;
 
-    if (pos.y > 5555)
-    {
-        change_state(DEAD_STATE, NULL);
-    }
-
     // Stop Luna when overlapping with tiles
     t = check_tile(0, 0);
     if (t)

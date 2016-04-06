@@ -5,6 +5,7 @@
 #include <time.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_primitives.h>
 #include "game.h"
 #include "gamestate.h"
 #include "scarestate.h"
@@ -39,6 +40,9 @@ data;
 static int crack_level = 0;
 static int step_count = 0;
 static int rush = 0;
+
+// Used to fade out
+static float alpha = 0;
 
 // Level width
 static int max_width = 0;
@@ -250,6 +254,17 @@ static void on_update()
 
     player_update();
 
+    if (view_y > 3333)
+    {
+        // Fade out slowly
+        alpha += 0.01;
+
+        if (alpha >= 1.0)
+        {
+            change_state(DEAD_STATE, NULL);
+        }
+    }
+
     while (view_x < 0) ++view_x;
     while (view_x > (max_width - 640)) --view_x;
 }
@@ -304,6 +319,8 @@ static void on_draw()
     }
 
     player_draw();
+
+    al_draw_filled_rectangle(0, 0, 640, 480, al_map_rgba_f(0, 0, 0, alpha));
 }
 
 struct State* get_game_state()

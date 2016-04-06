@@ -4,6 +4,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_primitives.h>
 #include "game.h"
 #include "state.h"
 
@@ -108,6 +109,12 @@ int game_init(struct Game_Config* config)
     }
 
     al_init_font_addon();
+
+    if (!al_init_primitives_addon())
+    {
+        puts("ERROR: Could not initialize primitives addon...");
+        return 0;
+    }
 
     if (config->fullscreen)
     {
