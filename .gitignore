@@ -1,6 +1,6 @@
-+Debug/
-+Release-mingw/
-+*.depend
-+*.layout
-+*.exe
-+*.o
+Debug/
+Release-mingw/
+*.depend
+*.layout
+*.exe
+*.o
