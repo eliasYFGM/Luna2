@@ -209,14 +209,14 @@ static void on_update()
 
     for (i=0; i<tile_count; ++i)
     {
-        if (tile_list[i].x < (view_x + (640 + tile_list[i].w))
+        if (tile_list[i].x < (view_x + (GAME_W + tile_list[i].w))
             && tile_list[i].x > (view_x - (tile_list[i].w * 2)))
         {
             vtiles[vtile_count++] = &tile_list[i];
         }
     }
 
-    if ((keys.left || keys.right) && view_x > 640 && !creepy)
+    if ((keys.left || keys.right) && view_x > GAME_W && !creepy)
     {
         if (rush)
         {
@@ -266,7 +266,7 @@ static void on_update()
     }
 
     while (view_x < 0) ++view_x;
-    while (view_x > (max_width - 640)) --view_x;
+    while (view_x > (max_width - GAME_W)) --view_x;
 }
 
 static void on_draw()
@@ -278,7 +278,7 @@ static void on_draw()
         int w = al_get_bitmap_width(data.bg);
         int h = al_get_bitmap_height(data.bg);
 
-        for (j=0; j<480; j+=w)
+        for (j=0; j<GAME_H; j+=w)
         {
             for (i=0; i<max_width; i+=h)
             {
@@ -320,7 +320,8 @@ static void on_draw()
 
     player_draw();
 
-    al_draw_filled_rectangle(0, 0, 640, 480, al_map_rgba_f(0, 0, 0, alpha));
+    al_draw_filled_rectangle(0, 0, GAME_W, GAME_H,
+        al_map_rgba_f(0, 0, 0, alpha));
 }
 
 struct State* get_game_state()

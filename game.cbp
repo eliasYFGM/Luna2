@@ -7,8 +7,8 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="/tmp/Luna2/game" prefix_auto="1" extension_auto="1" />
-				<Option object_output="/tmp/Luna2/obj/Debug" />
+				<Option output="Debug/game" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -20,7 +20,7 @@
 			</Target>
 			<Target title="Release-mingw">
 				<Option output="game.exe" prefix_auto="1" extension_auto="0" />
-				<Option object_output="/tmp/Luna2/obj/Release-mingw" />
+				<Option object_output="Release-mingw/" />
 				<Option type="0" />
 				<Option compiler="mingw-w64_cross-compiler" />
 				<Compiler>
@@ -34,6 +34,7 @@
 					<Add library="allegro_font.dll" />
 					<Add library="allegro_audio.dll" />
 					<Add library="allegro_acodec.dll" />
+					<Add library="allegro_primitives.dll" />
 				</Linker>
 			</Target>
 		</Build>

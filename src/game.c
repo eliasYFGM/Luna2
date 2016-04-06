@@ -30,8 +30,8 @@ ALLEGRO_COLOR bg_color;
 static struct State* states[MAX_STATES];
 static int current_s = 0;
 
-static float orig_w = 0;
-static float orig_h = 0;
+static float game_w = 0;
+static float game_h = 0;
 
 // Updates the aspect ratio when going full-screen or windowed
 static void aspect_ratio_transform()
@@ -39,12 +39,12 @@ static void aspect_ratio_transform()
     int window_w = al_get_display_width(game.display);
     int window_h = al_get_display_height(game.display);
 
-    float sw = (window_w / orig_w);
-    float sh = (window_h / orig_h);
+    float sw = (window_w / game_w);
+    float sh = (window_h / game_h);
     float scale = (sw < sh ? sw : sh);
 
-    float scale_w = (orig_w * scale);
-    float scale_h = (orig_h * scale);
+    float scale_w = (game_w * scale);
+    float scale_h = (game_h * scale);
     int scale_x_pos = (window_w - scale_w) / 2;
     int scale_y_pos = (window_h - scale_h) / 2;
 
@@ -142,8 +142,8 @@ int game_init(struct Game_Config* config)
     // Back-buffer
     game.buffer = al_create_bitmap(config->width, config->height);
 
-    orig_w = config->width;
-    orig_h = config->height;
+    game_w = config->width;
+    game_h = config->height;
 
     // Update the aspect ratio
     aspect_ratio_transform();
@@ -264,6 +264,16 @@ void game_run()
 void game_over()
 {
     game.is_running = 0;
+}
+
+float get_game_width()
+{
+    return game_w;
+}
+
+float get_game_height()
+{
+    return game_h;
 }
 
 void change_state(struct State* state, void* param)

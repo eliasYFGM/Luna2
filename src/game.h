@@ -25,6 +25,12 @@ int game_init(struct Game_Config* config);
 void game_run();
 void game_over();
 
+float get_game_width();
+float get_game_height();
+
+#define GAME_W  get_game_width()
+#define GAME_H  get_game_height()
+
 struct State;
 
 // State routines

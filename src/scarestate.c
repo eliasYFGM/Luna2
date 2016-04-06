@@ -71,7 +71,7 @@ static void on_update()
 
 static void on_draw()
 {
-    al_draw_text(font, C_WHITE, 320, 236, ALLEGRO_ALIGN_CENTER,
+    al_draw_text(font, C_WHITE, GAME_W / 2, GAME_H / 2, ALLEGRO_ALIGN_CENTER,
         "(insert screamer here)");
 
     if (data.image)
