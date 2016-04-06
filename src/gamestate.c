@@ -216,7 +216,7 @@ static void on_update()
         }
     }
 
-    if ((keys.left || keys.right) && view_x > GAME_W && !creepy)
+    if ((keys.left || keys.right) && !creepy)
     {
         if (rush)
         {
@@ -226,12 +226,13 @@ static void on_update()
         {
             ++step_count;
 
-            if ((step_count % 100) < 2)
+            // Increment crack level each 75 steps
+            if ((step_count % 75) < 1)
             {
                 ++crack_level;
 
                 // scarestate may appear quicker than normal...
-                if (rand() % 9 == 1 && view_x > 1000)
+                if (rand() % 20 == 1 && view_x > 1000)
                 {
                     rush = 1;
                 }
@@ -298,8 +299,6 @@ static void on_draw()
             vtiles[i]->y - view_y,
         0);
 
-        al_draw_bitmap(data.text, 257 - view_x, 289, 0);
-
         if (creepy)
         {
             al_draw_bitmap_region(data.cracks,
@@ -317,6 +316,8 @@ static void on_draw()
             0);
         }
     }
+
+    al_draw_bitmap(data.text, 257 - view_x, 289, 0);
 
     player_draw();
 

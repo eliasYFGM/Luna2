@@ -73,7 +73,7 @@ void player_update()
 
         if (pos.y < 480)
         {
-            pos.x -= keys.run ? 8 : 4;
+            pos.x -= keys.run ? 6 : 3;
         }
 
         while (check_tile(0, 0))
@@ -87,7 +87,7 @@ void player_update()
 
         if (pos.y < 480)
         {
-            pos.x += keys.run ? 8 : 4;
+            pos.x += keys.run ? 6 : 3;
         }
 
         while (check_tile(0, 0))

@@ -1,6 +1,9 @@
 Debug/
 Release-mingw/
+data/zalgopie.png
+data/noise.wav
 *.depend
 *.layout
 *.exe
 *.o
+

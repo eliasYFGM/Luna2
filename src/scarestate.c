@@ -16,11 +16,6 @@ static void on_init(void* param)
 {
     data.image = al_load_bitmap("data/zalgopie.png");
 
-    if (data.image == NULL)
-    {
-        data.image = al_load_bitmap("data/zalgopie.tga");
-    }
-
     data.noise = al_load_sample("data/noise.wav");
 
     if (data.noise)
@@ -62,7 +57,7 @@ static void on_update()
 {
     ++step_count;
 
-    if (step_count > 40)
+    if (step_count > 30)
     {
         // Back to the game
         pop_state();
@@ -72,7 +67,7 @@ static void on_update()
 static void on_draw()
 {
     al_draw_text(font, C_WHITE, GAME_W / 2, GAME_H / 2, ALLEGRO_ALIGN_CENTER,
-        "(insert screamer here)");
+        "zalgopie.png");
 
     if (data.image)
     {
