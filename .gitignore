@@ -1,3 +1,5 @@
++Debug/
++Release-mingw/
 +*.depend
 +*.layout
 +*.exe
