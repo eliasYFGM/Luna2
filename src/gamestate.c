@@ -241,7 +241,11 @@ static void on_update()
 
         if (crack_level >= 13)
         {
-            al_set_audio_stream_playing(data.music1, 0);
+            if (data.music1 != NULL)
+            {
+                al_set_audio_stream_playing(data.music1, 0);
+            }
+
             push_state(SCARE_STATE, NULL);
             creepy = 1;
             crack_level = 14;

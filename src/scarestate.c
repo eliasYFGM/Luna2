@@ -18,7 +18,7 @@ static void on_init(void* param)
 
     data.noise = al_load_sample("data/noise.wav");
 
-    if (data.noise)
+    if (data.noise != NULL)
     {
         al_play_sample(data.noise, 1.0, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
