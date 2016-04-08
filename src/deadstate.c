@@ -12,7 +12,6 @@ static struct // Data
 data;
 
 static float alpha = 0;
-static int step_count = 0;
 
 static void on_init(void* param)
 {
@@ -39,15 +38,14 @@ static void on_events(ALLEGRO_EVENT* event)
 
 static void on_update()
 {
+    // Fade-in animation
     if (alpha < 1.0)
     {
         alpha += 0.05;
     }
-
-    ++step_count;
-
-    if (step_count > 300)
+    else
     {
+        al_rest(10.0);
         game_over();
     }
 }
