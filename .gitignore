@@ -2,6 +2,8 @@ Debug/
 Release-mingw/
 data/zalgopie.png
 data/noise.wav
+data/music2.ogg
+data/youdied.ogg
 *.depend
 *.layout
 *.exe

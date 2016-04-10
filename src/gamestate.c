@@ -32,8 +32,7 @@ static struct // Data
     ALLEGRO_BITMAP* cracks;
     ALLEGRO_BITMAP* text;
 
-    ALLEGRO_AUDIO_STREAM* music1;
-    ALLEGRO_AUDIO_STREAM* music2;
+    ALLEGRO_AUDIO_STREAM* music;
 }
 data;
 
@@ -99,19 +98,19 @@ static void on_init(void* param)
     data.cracks = al_load_bitmap("data/cracks.tga");
     data.text = al_load_bitmap("data/text.tga");
 
-    data.music1 = al_load_audio_stream("data/music1.ogg", 2, 4096);
+    data.music = al_load_audio_stream("data/music1.ogg", 2, 4096);
 
-    if (data.music1 != NULL)
+    if (data.music != NULL)
     {
-        al_attach_audio_stream_to_mixer(data.music1, al_get_default_mixer());
-        al_set_audio_stream_playmode(data.music1, ALLEGRO_PLAYMODE_LOOP);
+        al_attach_audio_stream_to_mixer(data.music, al_get_default_mixer());
+        al_set_audio_stream_playmode(data.music, ALLEGRO_PLAYMODE_LOOP);
 
         // Loop points for the music
-        al_set_audio_stream_loop_secs(data.music1, 20.274,
-            al_get_audio_stream_length_secs(data.music1));
+        al_set_audio_stream_loop_secs(data.music, 20.274,
+            al_get_audio_stream_length_secs(data.music));
 
         // Play it
-        al_set_audio_stream_playing(data.music1, 1);
+        al_set_audio_stream_playing(data.music, 1);
     }
 
     srand(time(NULL));
@@ -127,9 +126,9 @@ static void on_end()
     al_destroy_bitmap(data.cracks);
     al_destroy_bitmap(data.text);
 
-    if (data.music1 != NULL)
+    if (data.music != NULL)
     {
-        al_destroy_audio_stream(data.music1);
+        al_destroy_audio_stream(data.music);
     }
 
     free(tile_list);
@@ -143,6 +142,19 @@ static void on_pause()
 
 static void on_resume()
 {
+    if (data.music != NULL)
+    {
+        al_destroy_audio_stream(data.music);
+
+        data.music = al_load_audio_stream("data/music2.ogg", 2, 4096);
+
+        if (data.music != NULL)
+        {
+            al_attach_audio_stream_to_mixer(data.music, al_get_default_mixer());
+            al_set_audio_stream_playmode(data.music, ALLEGRO_PLAYMODE_LOOP);
+            al_set_audio_stream_playing(data.music, 1);
+        }
+    }
 }
 
 static void on_events(ALLEGRO_EVENT* event)
@@ -209,7 +221,7 @@ static void on_update()
 
     for (i=0; i<tile_count; ++i)
     {
-        if (tile_list[i].x < (view_x + (GAME_W + tile_list[i].w))
+        if (tile_list[i].x < (view_x + (SCREEN_W + tile_list[i].w))
             && tile_list[i].x > (view_x - (tile_list[i].w * 2)))
         {
             vtiles[vtile_count++] = &tile_list[i];
@@ -241,9 +253,9 @@ static void on_update()
 
         if (crack_level >= 13)
         {
-            if (data.music1 != NULL)
+            if (data.music != NULL)
             {
-                al_set_audio_stream_playing(data.music1, 0);
+                al_set_audio_stream_playing(data.music, 0);
             }
 
             push_state(SCARE_STATE, NULL);
@@ -271,7 +283,7 @@ static void on_update()
     }
 
     while (view_x < 0) ++view_x;
-    while (view_x > (max_width - GAME_W)) --view_x;
+    while (view_x > (max_width - SCREEN_W)) --view_x;
 }
 
 static void on_draw()
@@ -283,7 +295,7 @@ static void on_draw()
         int w = al_get_bitmap_width(data.bg);
         int h = al_get_bitmap_height(data.bg);
 
-        for (j=0; j<GAME_H; j+=w)
+        for (j=0; j<SCREEN_H; j+=w)
         {
             for (i=0; i<max_width; i+=h)
             {
@@ -325,7 +337,7 @@ static void on_draw()
 
     player_draw();
 
-    al_draw_filled_rectangle(0, 0, GAME_W, GAME_H,
+    al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H,
         al_map_rgba_f(0, 0, 0, alpha));
 }
 

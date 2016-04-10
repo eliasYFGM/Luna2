@@ -23,7 +23,7 @@ static void on_init(void* param)
         al_play_sample(data.noise, 1.0, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
-    bg_color = C_BLACK;
+    set_bg_color(C_BLACK);
 }
 
 static void on_end()
@@ -38,7 +38,7 @@ static void on_end()
         al_destroy_sample(data.noise);
     }
 
-    bg_color = al_map_rgb(30, 0, 0);
+    set_bg_color(al_map_rgb(30, 0, 0));
 }
 
 static void on_pause()
@@ -57,7 +57,7 @@ static void on_update()
 {
     ++step_count;
 
-    if (step_count > 30)
+    if (step_count > game_config->framerate)
     {
         // Back to the game
         pop_state();
@@ -66,8 +66,8 @@ static void on_update()
 
 static void on_draw()
 {
-    al_draw_text(font, C_WHITE, GAME_W / 2, GAME_H / 2, ALLEGRO_ALIGN_CENTER,
-        "zalgopie.png");
+    al_draw_text(font, C_WHITE, SCREEN_W / 2, SCREEN_H / 2,
+        ALLEGRO_ALIGN_CENTER, "zalgopie.png");
 
     if (data.image)
     {

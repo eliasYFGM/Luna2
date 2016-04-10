@@ -16,12 +16,25 @@ static float alpha = 0;
 static void on_init(void* param)
 {
     data.dead = al_load_bitmap("data/dead.tga");
-    bg_color = C_BLACK;
+
+    data.music = al_load_audio_stream("data/youdied.ogg", 2, 4086);
+    if (data.music != NULL)
+    {
+        al_attach_audio_stream_to_mixer(data.music, al_get_default_mixer());
+        al_set_audio_stream_playing(data.music, 1);
+    }
+
+    set_bg_color(C_BLACK);
 }
 
 static void on_end()
 {
     al_destroy_bitmap(data.dead);
+
+    if (data.music != NULL)
+    {
+        al_destroy_audio_stream(data.music);
+    }
 }
 
 static void on_pause()
@@ -45,7 +58,7 @@ static void on_update()
     }
     else
     {
-        al_rest(10.0);
+        al_rest(25.0);
         game_over();
     }
 }
