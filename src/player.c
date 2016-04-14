@@ -1,8 +1,8 @@
 #include <allegro5/allegro.h>
 #include "player.h"
 #include "game.h"
-#include "gamestate.h"
-#include "deadstate.h"
+#include "states/gamestate.h"
+#include "states/deadstate.h"
 
 static struct // Player position
 {
@@ -21,7 +21,6 @@ static struct // Sprite data
     ALLEGRO_BITMAP* stand;
     ALLEGRO_BITMAP* walk;
     ALLEGRO_BITMAP* jump_fall;
-
     int frame;
 }
 spr;
@@ -64,8 +63,6 @@ void player_end()
 
 void player_update()
 {
-    struct Tile* t = NULL;
-
     // Moving...
     if (keys.left)
     {
@@ -112,7 +109,7 @@ void player_update()
     pos.y += pos.yspeed;
 
     // Stop Luna when overlapping with tiles
-    t = check_tile(0, 0);
+    struct Tile* t = check_tile(0, 0);
     if (t)
     {
         if (pos.yspeed > 0)

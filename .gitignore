@@ -6,6 +6,7 @@ data/music2.ogg
 data/youdied.ogg
 *.depend
 *.layout
+*.dll
 *.exe
 *.o
 

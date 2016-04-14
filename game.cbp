@@ -57,18 +57,10 @@
 			<Add option="-fexceptions" />
 			<Add option="-Wno-trigraphs" />
 		</Compiler>
-		<Unit filename="src/deadstate.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/deadstate.h" />
 		<Unit filename="src/game.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/game.h" />
-		<Unit filename="src/gamestate.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/gamestate.h" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -79,11 +71,19 @@
 		<Unit filename="src/resource.rc">
 			<Option target="Release-mingw" />
 		</Unit>
-		<Unit filename="src/scarestate.c">
+		<Unit filename="src/state.h" />
+		<Unit filename="src/states/deadstate.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/scarestate.h" />
-		<Unit filename="src/state.h" />
+		<Unit filename="src/states/deadstate.h" />
+		<Unit filename="src/states/gamestate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/states/gamestate.h" />
+		<Unit filename="src/states/scarestate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/states/scarestate.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
