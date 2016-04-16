@@ -20,6 +20,9 @@ struct Keys keys = { 0, 0, 0, 0 };
 float view_x = 0;
 float view_y = 0;
 
+// Player
+static struct Player* player;
+
 // Full list of tiles
 static struct Tile* tile_list;
 static int tile_count = 0;
@@ -114,7 +117,7 @@ static void on_init(void* param)
 
     srand(time(NULL));
 
-    player_init();
+    player = create_player(100, 100);
 }
 
 static void on_end()
@@ -132,7 +135,7 @@ static void on_end()
 
     free(tile_list);
 
-    player_end();
+    destroy_player(player);
 }
 
 static void on_pause()
@@ -268,7 +271,26 @@ static void on_update()
         }
     }
 
-    player_update();
+    player_update(player);
+
+    // Update camera
+    while (view_x > (max_width - SCREEN_W) || player->x < view_x + 270)
+	{
+		--view_x;
+	}
+
+	while (view_x < 0 || player->x > view_x + 320)
+	{
+		++view_x;
+	}
+
+	if (go_down && view_x > 5555)
+	{
+        while (player->y > view_y + 222)
+        {
+            ++view_y;
+        }
+    }
 
     if (view_y > 3333)
     {
@@ -280,9 +302,6 @@ static void on_update()
             change_state(DEAD_STATE, NULL);
         }
     }
-
-    while (view_x < 0) ++view_x;
-    while (view_x > (max_width - SCREEN_W)) --view_x;
 }
 
 static void on_draw()
@@ -334,7 +353,7 @@ static void on_draw()
 
     al_draw_bitmap(data.text, 257 - view_x, 289, 0);
 
-    player_draw();
+    player_draw(player);
 
     al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H,
         al_map_rgba_f(0, 0, 0, alpha));

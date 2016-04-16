@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
         1
     };
 
-    if (game_init(&config))
+    if (game_init(&config, argc, argv))
     {
         // Starting state
         // Second argument is a pointer that will be passed to the init()

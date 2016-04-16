@@ -27,7 +27,7 @@ struct Game_Config* game_config;
 extern ALLEGRO_FONT* font;
 
 // Main game engine routines
-int game_init(struct Game_Config* config);
+int game_init(struct Game_Config* config, int argc, char** argv);
 void game_run();
 void game_over();
 void set_bg_color(ALLEGRO_COLOR color);

@@ -4,38 +4,17 @@
 #include "states/gamestate.h"
 #include "states/deadstate.h"
 
-static struct // Player position
-{
-    float x;
-    float y;
-    float yspeed;
-    int dir;
-}
-pos =
-{
-    100, 100, 0, 1
-};
-
-static struct // Sprite data
-{
-    ALLEGRO_BITMAP* stand;
-    ALLEGRO_BITMAP* walk;
-    ALLEGRO_BITMAP* jump_fall;
-    int frame;
-}
-spr;
-
 int go_down = 0;
 
-// Checks for a tile using current position and width/height
-static struct Tile* check_tile(float x, float y)
+// Checks for a tile using the player's position and width/height
+static struct Tile* check_tile(struct Player* p, float x, float y)
 {
     int i;
     struct Tile* t = NULL;
 
     for (i=0; i<vtile_count; ++i)
     {
-        if (check_bb_collision((pos.x + 15) + x, (pos.y + 20) + y,
+        if (check_bb_collision((p->x + 15) + x, (p->y + 20) + y,
             22, 23, vtiles[i]->x, vtiles[i]->y, vtiles[i]->w, vtiles[i]->h))
         {
             t = vtiles[i];
@@ -45,141 +24,132 @@ static struct Tile* check_tile(float x, float y)
     return t;
 }
 
-void player_init()
+struct Player* create_player(float x, float y)
 {
-    spr.stand = al_load_bitmap("data/stand.tga");
-    spr.walk = al_load_bitmap("data/trotting.tga");
-    spr.jump_fall = al_load_bitmap("data/flying.tga");
+    struct Player* p = malloc(sizeof(struct Player));
 
-    spr.frame = 0;
+    p->sprite.stand = al_load_bitmap("data/stand.tga");
+    p->sprite.walk = al_load_bitmap("data/trotting.tga");
+    p->sprite.flying = al_load_bitmap("data/flying.tga");
+    p->sprite.frame = 0;
+
+    p->x = x;
+    p->y = y;
+    p->yspeed = 0;
+    p->dir = 1;
+
+    return p;
 }
 
-void player_end()
+void destroy_player(struct Player* p)
 {
-    al_destroy_bitmap(spr.stand);
-    al_destroy_bitmap(spr.walk);
-    al_destroy_bitmap(spr.jump_fall);
+    al_destroy_bitmap(p->sprite.stand);
+    al_destroy_bitmap(p->sprite.walk);
+    al_destroy_bitmap(p->sprite.flying);
+
+    free(p);
 }
 
-void player_update()
+void player_update(struct Player* p)
 {
     // Moving...
     if (keys.left)
     {
-        pos.dir = 0;
+        p->dir = 0;
 
-        if (pos.y < 480)
+        if (p->y < 480)
         {
-            pos.x -= keys.run ? 6 : 3;
+            p->x -= keys.run ? 6 : 3;
         }
 
-        while (check_tile(0, 0))
+        while (check_tile(p, 0, 0))
         {
-            ++pos.x;
+            ++p->x;
         }
     }
     else if (keys.right)
     {
-        pos.dir = 1;
+        p->dir = 1;
 
-        if (pos.y < 480)
+        if (p->y < 480)
         {
-            pos.x += keys.run ? 6 : 3;
+            p->x += keys.run ? 6 : 3;
         }
 
-        while (check_tile(0, 0))
+        while (check_tile(p, 0, 0))
         {
-            --pos.x;
+            --p->x;
         }
     }
 
     // Only jump if Luna is standing on ground
-    if (keys.jump && check_tile(0, 1))
+    if (keys.jump && check_tile(p, 0, 1))
     {
-        pos.yspeed = -12;
+        p->yspeed = -12;
     }
 
     // Update vertical speed
-    pos.yspeed += 0.5;
-    if (pos.yspeed > 12)
+    p->yspeed += 0.5;
+    if (p->yspeed > 12)
     {
-        pos.yspeed = 12;
+        p->yspeed = 12;
     }
 
-    pos.y += pos.yspeed;
+    p->y += p->yspeed;
 
     // Stop Luna when overlapping with tiles
-    struct Tile* t = check_tile(0, 0);
+    struct Tile* t = check_tile(p, 0, 0);
     if (t)
     {
-        if (pos.yspeed > 0)
+        if (p->yspeed > 0)
         {
-            pos.y = t->y - 43;
+            p->y = t->y - 43;
         }
-        else if (pos.yspeed < 0)
+        else if (p->yspeed < 0)
         {
-            pos.y = t->y + t->h - 20;
+            p->y = t->y + t->h - 20;
         }
 
-        pos.yspeed = 0;
+        p->yspeed = 0;
     }
 
     // Update frame of animation
     if (keys.run)
     {
-        spr.frame += 2;
+        p->sprite.frame += 2;
     }
     else
     {
-        ++spr.frame;
+        ++p->sprite.frame;
     }
 
-    if (spr.frame >= 16)
+    if (p->sprite.frame >= 16)
     {
-        spr.frame = 0;
-    }
-
-    // Update camera
-    while (pos.x < view_x + 270)
-	{
-		--view_x;
-	}
-
-	while (pos.x > view_x + 320)
-	{
-		++view_x;
-	}
-
-	if (go_down && view_x > 5555)
-	{
-        while (pos.y > view_y + 222)
-        {
-            ++view_y;
-        }
+        p->sprite.frame = 0;
     }
 }
 
-void player_draw()
+void player_draw(struct Player* p)
 {
     // On ground
-    if (check_tile(0, 1))
+    if (check_tile(p, 0, 1))
     {
         if (keys.left || keys.right)
         {
-            al_draw_bitmap_region(spr.walk, spr.frame * 48, 0, 48, 47,
-                pos.x - view_x, pos.y-4 - view_y,
-                pos.dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
+            al_draw_bitmap_region(p->sprite.walk, p->sprite.frame * 48,
+                0, 48, 47, p->x - view_x, p->y-4 - view_y,
+                p->dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
         }
         else
         {
-            al_draw_bitmap(spr.stand, pos.x - view_x, pos.y - view_y,
-            pos.dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
+            al_draw_bitmap(p->sprite.stand, p->x - view_x, p->y - view_y,
+            p->dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
         }
     }
     else // Flying or falling
     {
-        al_draw_bitmap_region(spr.jump_fall, spr.frame * 48, 0, 48, 56,
-            pos.x - view_x, pos.y-4 - view_y,
-            pos.dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
+        al_draw_bitmap_region(p->sprite.flying, p->sprite.frame * 48,
+            0, 48, 56, p->x - view_x, p->y-4 - view_y,
+            p->dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
     }
 }

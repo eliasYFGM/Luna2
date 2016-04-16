@@ -51,7 +51,7 @@ static void aspect_ratio_transform()
     al_use_transform(&trans);
 }
 
-int game_init(struct Game_Config* config)
+int game_init(struct Game_Config* config, int argc, char** argv)
 {
     int i;
 
