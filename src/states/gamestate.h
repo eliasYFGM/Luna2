@@ -9,28 +9,21 @@ struct State* get_game_state();
 
 struct Tile
 {
-    int left;
-    int top;
+    // Position in the tileset
+    int left, top;
+
+    // With and height
     int w, h;
+
+    // Position in-game
     float x, y;
 };
 
-// Array holding the tiles on-screen
+// Tiles that are on-screen (not full list)
 extern struct Tile* vtiles[];
 
-// How many tiles?
+// How many of them?
 extern int vtile_count;
-
-struct Keys
-{
-    int left;
-    int right;
-    int run;
-    int jump;
-};
-
-// Key status
-extern struct Keys keys;
 
 // Camera vars
 extern float view_x;

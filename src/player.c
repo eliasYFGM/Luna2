@@ -4,6 +4,24 @@
 #include "states/gamestate.h"
 #include "states/deadstate.h"
 
+struct Player
+{
+    float x, y;
+    float yspeed;
+    int dir;
+
+    struct // Sprite data
+    {
+        ALLEGRO_BITMAP* stand;
+        ALLEGRO_BITMAP* walk;
+        ALLEGRO_BITMAP* flying;
+        int frame;
+    }
+    sprite;
+
+    struct Keys* keys;
+};
+
 int go_down = 0;
 
 // Checks for a tile using the player's position and width/height
@@ -24,7 +42,7 @@ static struct Tile* check_tile(struct Player* p, float x, float y)
     return t;
 }
 
-struct Player* create_player(float x, float y)
+struct Player* create_player(float x, float y, struct Keys* keys)
 {
     struct Player* p = malloc(sizeof(struct Player));
 
@@ -32,6 +50,8 @@ struct Player* create_player(float x, float y)
     p->sprite.walk = al_load_bitmap("data/trotting.tga");
     p->sprite.flying = al_load_bitmap("data/flying.tga");
     p->sprite.frame = 0;
+
+    p->keys = keys;
 
     p->x = x;
     p->y = y;
@@ -53,13 +73,13 @@ void destroy_player(struct Player* p)
 void player_update(struct Player* p)
 {
     // Moving...
-    if (keys.left)
+    if (p->keys->left)
     {
         p->dir = 0;
 
         if (p->y < 480)
         {
-            p->x -= keys.run ? 6 : 3;
+            p->x -= p->keys->run ? 6 : 3;
         }
 
         while (check_tile(p, 0, 0))
@@ -67,13 +87,13 @@ void player_update(struct Player* p)
             ++p->x;
         }
     }
-    else if (keys.right)
+    else if (p->keys->right)
     {
         p->dir = 1;
 
         if (p->y < 480)
         {
-            p->x += keys.run ? 6 : 3;
+            p->x += p->keys->run ? 6 : 3;
         }
 
         while (check_tile(p, 0, 0))
@@ -83,7 +103,7 @@ void player_update(struct Player* p)
     }
 
     // Only jump if Luna is standing on ground
-    if (keys.jump && check_tile(p, 0, 1))
+    if (p->keys->jump && check_tile(p, 0, 1))
     {
         p->yspeed = -12;
     }
@@ -114,7 +134,7 @@ void player_update(struct Player* p)
     }
 
     // Update frame of animation
-    if (keys.run)
+    if (p->keys->run)
     {
         p->sprite.frame += 2;
     }
@@ -134,10 +154,10 @@ void player_draw(struct Player* p)
     // On ground
     if (check_tile(p, 0, 1))
     {
-        if (keys.left || keys.right)
+        if (p->keys->left || p->keys->right)
         {
             al_draw_bitmap_region(p->sprite.walk, p->sprite.frame * 48,
-                0, 48, 47, p->x - view_x, p->y-4 - view_y,
+                0, 48, 47, p->x - view_x, p->y - 4 - view_y,
                 p->dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
         }
         else
@@ -149,7 +169,13 @@ void player_draw(struct Player* p)
     else // Flying or falling
     {
         al_draw_bitmap_region(p->sprite.flying, p->sprite.frame * 48,
-            0, 48, 56, p->x - view_x, p->y-4 - view_y,
+            0, 48, 56, p->x - view_x, p->y - 4 - view_y,
             p->dir == 1 ? 0 : ALLEGRO_FLIP_HORIZONTAL);
     }
+}
+
+void player_get_pos(struct Player* p, int* x, int* y)
+{
+    *x = p->x;
+    *y = p->y;
 }

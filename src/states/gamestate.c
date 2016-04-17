@@ -15,10 +15,11 @@
 struct Tile* vtiles[500];
 int vtile_count = 0;
 
-struct Keys keys = { 0, 0, 0, 0 };
-
 float view_x = 0;
 float view_y = 0;
+
+// Structure holding default player keys
+static struct Keys default_keys = { 0, 0, 0, 0 };
 
 // Player
 static struct Player* player;
@@ -117,7 +118,7 @@ static void on_init(void* param)
 
     srand(time(NULL));
 
-    player = create_player(100, 100);
+    player = create_player(100, 100, &default_keys);
 }
 
 static void on_end()
@@ -165,23 +166,23 @@ static void on_events(ALLEGRO_EVENT* event)
     {
         if (event->keyboard.keycode == ALLEGRO_KEY_LEFT)
         {
-            keys.left = 1;
+            default_keys.left = 1;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_RIGHT)
         {
-            keys.right = 1;
+            default_keys.right = 1;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_UP)
         {
-            keys.jump = 1;
+            default_keys.jump = 1;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_LSHIFT
         || event->keyboard.keycode == ALLEGRO_KEY_RSHIFT)
         {
-            keys.run = 1;
+            default_keys.run = 1;
         }
     }
 
@@ -189,29 +190,29 @@ static void on_events(ALLEGRO_EVENT* event)
     {
         if (event->keyboard.keycode == ALLEGRO_KEY_LEFT)
         {
-            keys.left = 0;
+            default_keys.left = 0;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_RIGHT)
         {
-            keys.right = 0;
+            default_keys.right = 0;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_UP)
         {
-            keys.jump = 0;
+            default_keys.jump = 0;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_LSHIFT
         || event->keyboard.keycode == ALLEGRO_KEY_RSHIFT)
         {
-            keys.run = 0;
+            default_keys.run = 0;
         }
     }
 
     if (creepy)
     {
-        keys.run = 0;
+        default_keys.run = 0;
     }
 }
 
@@ -230,7 +231,7 @@ static void on_update()
         }
     }
 
-    if ((keys.left || keys.right) && !creepy)
+    if ((default_keys.left || default_keys.right) && !creepy)
     {
         if (rush)
         {
@@ -263,30 +264,32 @@ static void on_update()
             push_state(SCARE_STATE, NULL);
             creepy = 1;
             crack_level = 14;
-            keys.left = 0;
-            keys.right = 0;
-            keys.run = 0;
-            keys.jump = 0;
+            default_keys.left = 0;
+            default_keys.right = 0;
+            default_keys.run = 0;
+            default_keys.jump = 0;
             go_down = 1;
         }
     }
 
+    int x, y;
     player_update(player);
+    player_get_pos(player, &x, &y);
 
     // Update camera
-    while (view_x > (max_width - SCREEN_W) || player->x < view_x + 270)
-	{
-		--view_x;
-	}
+    while (view_x > (max_width - SCREEN_W) || x < view_x + 270)
+    {
+        --view_x;
+    }
 
-	while (view_x < 0 || player->x > view_x + 320)
-	{
-		++view_x;
-	}
+    while (view_x < 0 || x > view_x + 320)
+    {
+        ++view_x;
+    }
 
-	if (go_down && view_x > 5555)
-	{
-        while (player->y > view_y + 222)
+    if (go_down && view_x > 5555)
+    {
+        while (y > view_y + 222)
         {
             ++view_y;
         }
