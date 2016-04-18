@@ -18,7 +18,7 @@ struct Game_Config
 };
 
 // Pointer to the original game settings (main.c)
-struct Game_Config* game_config;
+extern struct Game_Config* game_config;
 
 #define SCREEN_W    game_config->width
 #define SCREEN_H    game_config->height

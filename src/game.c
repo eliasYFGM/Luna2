@@ -24,6 +24,7 @@ game =
     { 0, 0, 0, 0 }
 };
 
+struct Game_Config* game_config;
 ALLEGRO_FONT* font;
 
 #define MAX_STATES  8
