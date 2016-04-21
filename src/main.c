@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "game.h"
 #include "states/gamestate.h"
 
@@ -14,7 +13,7 @@ int main(int argc, char* argv[])
         // Framerate (FPS)
         30,
         // Want full-screen?
-        0,
+        1,
         // Want audio module?
         1
     };

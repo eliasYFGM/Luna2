@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
@@ -103,6 +104,12 @@ int game_init(struct Game_Config* config, int argc, char** argv)
     if (!al_init_image_addon())
     {
         puts("ERROR: Could not initialize image addon...");
+        return 0;
+    }
+
+    if (!al_init_primitives_addon())
+    {
+        puts("ERROR: Could not initialize primitives addon...");
         return 0;
     }
 
