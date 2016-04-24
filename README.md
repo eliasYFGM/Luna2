@@ -9,4 +9,4 @@ Music - Super Ponybeat
 
 Luna sprites - Desktop Ponies
 
-Graphics (BG, tileset, etc.) - Annonymous
+Graphics (BG, tileset, etc.) - Anonymous
