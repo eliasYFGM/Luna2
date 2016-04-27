@@ -15,7 +15,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add option="`pkg-config --libs allegro-5.0 allegro_acodec-5.0 allegro_audio-5.0 allegro_font-5.0 allegro_image-5.0 allegro_primitives-5.0`" />
+					<Add option="`pkg-config --libs allegro-5 allegro_acodec-5 allegro_audio-5 allegro_font-5 allegro_image-5 allegro_primitives-5`" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -29,7 +29,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="`pkg-config --libs --static allegro-static-5.0 allegro_image-static-5.0 allegro_audio-static-5.0 allegro_acodec-static-5.0 allegro_font-static-5.0 allegro_primitives-static-5.0`" />
+					<Add option="`pkg-config --libs --static allegro-static-5 allegro_image-static-5 allegro_audio-static-5 allegro_acodec-static-5 allegro_font-static-5 allegro_primitives-static-5`" />
 				</Linker>
 			</Target>
 			<Target title="Release-mingw">
