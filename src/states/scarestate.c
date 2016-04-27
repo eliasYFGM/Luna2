@@ -57,7 +57,7 @@ static void on_update()
 {
     ++step_count;
 
-    if (step_count > game_config->framerate)
+    if (step_count > default_config->framerate)
     {
         // Back to the game
         pop_state();

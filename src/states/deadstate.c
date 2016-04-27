@@ -21,7 +21,6 @@ static void on_init(void* param)
     if (data.music != NULL)
     {
         al_attach_audio_stream_to_mixer(data.music, al_get_default_mixer());
-        al_set_audio_stream_playing(data.music, 1);
     }
 
     set_bg_color(C_BLACK);

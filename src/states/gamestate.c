@@ -41,7 +41,6 @@ data;
 
 static int crack_level = 0;
 static int step_count = 0;
-static int rush = 0;
 
 // Used to fade out
 static float alpha = 0;
@@ -49,8 +48,8 @@ static float alpha = 0;
 // Level width
 static int max_width = 0;
 
-// Whether we've reached 'creepy mode'
-static int creepy = 0;
+static int creepy = FALSE;
+static int rush = FALSE;
 
 static void on_init(void* param)
 {
@@ -111,9 +110,6 @@ static void on_init(void* param)
         // Loop points for the music
         al_set_audio_stream_loop_secs(data.music, 20.274,
             al_get_audio_stream_length_secs(data.music));
-
-        // Play it
-        al_set_audio_stream_playing(data.music, 1);
     }
 
     srand(time(NULL));
@@ -155,7 +151,6 @@ static void on_resume()
         {
             al_attach_audio_stream_to_mixer(data.music, al_get_default_mixer());
             al_set_audio_stream_playmode(data.music, ALLEGRO_PLAYMODE_LOOP);
-            al_set_audio_stream_playing(data.music, 1);
         }
     }
 }
@@ -166,23 +161,23 @@ static void on_events(ALLEGRO_EVENT* event)
     {
         if (event->keyboard.keycode == ALLEGRO_KEY_LEFT)
         {
-            default_keys.left = 1;
+            default_keys.left = TRUE;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_RIGHT)
         {
-            default_keys.right = 1;
+            default_keys.right = TRUE;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_UP)
         {
-            default_keys.jump = 1;
+            default_keys.jump = TRUE;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_LSHIFT
         || event->keyboard.keycode == ALLEGRO_KEY_RSHIFT)
         {
-            default_keys.run = 1;
+            default_keys.run = TRUE;
         }
     }
 
@@ -190,29 +185,29 @@ static void on_events(ALLEGRO_EVENT* event)
     {
         if (event->keyboard.keycode == ALLEGRO_KEY_LEFT)
         {
-            default_keys.left = 0;
+            default_keys.left = FALSE;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_RIGHT)
         {
-            default_keys.right = 0;
+            default_keys.right = FALSE;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_UP)
         {
-            default_keys.jump = 0;
+            default_keys.jump = FALSE;
         }
 
         if (event->keyboard.keycode == ALLEGRO_KEY_LSHIFT
         || event->keyboard.keycode == ALLEGRO_KEY_RSHIFT)
         {
-            default_keys.run = 0;
+            default_keys.run = FALSE;
         }
     }
 
     if (creepy)
     {
-        default_keys.run = 0;
+        default_keys.run = FALSE;
     }
 }
 
@@ -249,7 +244,7 @@ static void on_update()
                 // scarestate may appear quicker than normal...
                 if (rand() % 20 == 1 && view_x > 1000)
                 {
-                    rush = 1;
+                    rush = TRUE;
                 }
             }
         }
@@ -262,13 +257,13 @@ static void on_update()
             }
 
             push_state(SCARE_STATE, NULL);
-            creepy = 1;
             crack_level = 14;
             default_keys.left = 0;
             default_keys.right = 0;
             default_keys.run = 0;
             default_keys.jump = 0;
-            go_down = 1;
+            go_down = TRUE;
+            creepy = TRUE;
         }
     }
 
