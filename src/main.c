@@ -1,3 +1,9 @@
+/*
+  main.c
+
+  The main game configuration and startup
+*/
+
 #include "game.h"
 #include "states/gamestate.h"
 
@@ -21,9 +27,9 @@ int main(int argc, char* argv[])
     if (game_init(&config, argc, argv))
     {
         // Starting state
-        // Second argument is a pointer that will be passed to the init()
-        // function of the state (a void*)
-        change_state(GAME_STATE, NULL);
+        // Second argument is a value that can be passed to the init()
+        // function of the state (a long)
+        change_state(GAME_STATE, 0);
 
         // Run the game until it's done
         game_run();

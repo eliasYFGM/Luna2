@@ -1,3 +1,9 @@
+/*
+  scarestate.c
+
+  Blocks the game for a second before entering the "creepy" part.
+*/
+
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_audio.h>
 #include "scarestate.h"
@@ -12,7 +18,7 @@ data;
 
 static int step_count = 0;
 
-static void on_init(void* param)
+static void on_init(long param)
 {
     data.image = al_load_bitmap("data/zalgopie.png");
 
@@ -26,7 +32,7 @@ static void on_init(void* param)
     set_bg_color(C_BLACK);
 }
 
-static void on_end()
+static void on_end(int over)
 {
     if (data.image != NULL)
     {

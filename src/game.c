@@ -1,3 +1,10 @@
+/*
+  game.c
+
+  Core of the main game engine.
+  Initializes modules and the display (NOT the main game - see gamestate.c)
+*/
+
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -240,7 +247,7 @@ void game_run()
     {
         if (states[i] != NULL)
         {
-            states[i]->end();
+            states[i]->end(TRUE);
         }
     }
 
@@ -261,18 +268,18 @@ void set_bg_color(ALLEGRO_COLOR color)
     game.bg_color = color;
 }
 
-void change_state(struct State* state, void* param)
+void change_state(struct State* state, long param)
 {
     if (states[current_state] != NULL)
     {
-        states[current_state]->end();
+        states[current_state]->end(FALSE);
     }
 
     states[current_state] = state;
     state->init(param);
 }
 
-void push_state(struct State* state, void* param)
+void push_state(struct State* state, long param)
 {
     if (current_state < (MAX_STATES - 1))
     {
@@ -294,7 +301,7 @@ void pop_state()
 {
     if (current_state > 0)
     {
-        states[current_state]->end();
+        states[current_state]->end(FALSE);
         states[current_state] = NULL;
         states[--current_state]->resume();
     }

@@ -1,4 +1,9 @@
-// The main Game state that controls everything
+/*
+  gamestate.c
+
+  The main state that controls everything in the game.
+  Does NOT initialize the modules - for that see game.c
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,7 +56,7 @@ static int max_width = 0;
 static int creepy = FALSE;
 static int rush = FALSE;
 
-static void on_init(void* param)
+static void on_init(long param)
 {
     int i;
     FILE* file_level;
@@ -117,7 +122,7 @@ static void on_init(void* param)
     player = create_player(100, 100, &default_keys);
 }
 
-static void on_end()
+static void on_end(int over)
 {
     al_destroy_bitmap(data.bg);
     al_destroy_bitmap(data.tiles);
@@ -256,7 +261,7 @@ static void on_update()
                 al_set_audio_stream_playing(data.music, 0);
             }
 
-            push_state(SCARE_STATE, NULL);
+            push_state(SCARE_STATE, 0);
             crack_level = 14;
             default_keys.left = 0;
             default_keys.right = 0;
@@ -297,7 +302,7 @@ static void on_update()
 
         if (alpha >= 1.0)
         {
-            change_state(DEAD_STATE, NULL);
+            change_state(DEAD_STATE, 0);
         }
     }
 }

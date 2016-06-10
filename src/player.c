@@ -1,3 +1,9 @@
+/*
+  player.c
+
+  Controls the player's behavior and animation
+*/
+
 #include <allegro5/allegro.h>
 #include "player.h"
 #include "game.h"

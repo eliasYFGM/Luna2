@@ -1,3 +1,10 @@
+/*
+  deadstate.c
+
+  This is the final part of the game. Usually it just shows an image of Luna
+  falling dead, and pauses for about a half-minute.
+*/
+
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_audio.h>
@@ -13,7 +20,7 @@ data;
 
 static float alpha = 0;
 
-static void on_init(void* param)
+static void on_init(long param)
 {
     data.dead = al_load_bitmap("data/dead.tga");
 
@@ -26,7 +33,7 @@ static void on_init(void* param)
     set_bg_color(C_BLACK);
 }
 
-static void on_end()
+static void on_end(int over)
 {
     al_destroy_bitmap(data.dead);
 
