@@ -1,13 +1,15 @@
 # Luna 2
-This is a small project that I started as a "tribute" to the Luna Game series, after 5 years of its first release.
+This is an open-source remake of the creepypasta game "Luna 2" (or Luna Game 2) in the C language, with better movement and physics.
 
-Basically a clone of Luna 2 (or Luna Game 2), remade in C with better movement and physics.
+I started this project as a small tribute to the Luna Game series, after 5 years of its first release in 2011.
 
 ## Compilation
 
-The default compilation process is done through Code::Blocks, under Linux. It can also target Windows if you have the cross-compiler tools MinGW32 or MinGW-w64 installed.
+Compilation is done through Code::Blocks under Linux. It can also target Windows if you have the cross-compiler tools MinGW32 or MinGW-w64 installed.
 
-At least Allegro 5.0 is required, along with acodec (with ogg support), audio, image, font and primitives addons.
+If you are using Windows, be sure to have Code::Blocks installed and change the linker options to fit your current configuration.
+
+At least Allegro 5.0 is required, with acodec (+ ogg/vorbis support), audio, image, font and primitives addons.
 
 ## Credits
 
