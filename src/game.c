@@ -153,7 +153,6 @@ int game_init(struct Game_Config* config, int argc, char** argv)
 
     game.bg_color = al_map_rgb(192, 192, 192);
     game.initialized = TRUE;
-    game.is_running = TRUE;
 
     return 1;
 }
@@ -176,6 +175,7 @@ void game_run()
         al_get_timer_event_source(game.timer));
 
     al_start_timer(game.timer);
+    game.is_running = TRUE;
 
     // Main game loop
     while (game.is_running)
@@ -205,6 +205,8 @@ void game_run()
             // Inspired by Game Maker.
             if (event.keyboard.keycode == ALLEGRO_KEY_F4)
             {
+                stop_game_timer();
+
                 if (al_get_display_flags(game.display) & ALLEGRO_FULLSCREEN_WINDOW)
                 {
                     al_toggle_display_flag(game.display, ALLEGRO_FULLSCREEN_WINDOW, 0);
@@ -215,6 +217,8 @@ void game_run()
                 }
 
                 aspect_ratio_transform();
+
+                resume_game_timer();
             }
         }
         else if (event.type == ALLEGRO_EVENT_TIMER)
@@ -263,9 +267,28 @@ void game_over()
     game.is_running = FALSE;
 }
 
+void game_rest(double msec)
+{
+    stop_game_timer();
+    al_rest(msec);
+    resume_game_timer();
+}
+
 void set_bg_color(ALLEGRO_COLOR color)
 {
     game.bg_color = color;
+}
+
+// These stop-resume functions are in case when the game needs to "pause"
+// without generating timer events.
+void stop_game_timer()
+{
+  al_stop_timer(game.timer);
+}
+
+void resume_game_timer()
+{
+  al_start_timer(game.timer);
 }
 
 void change_state(struct State* state, long param)

@@ -61,23 +61,26 @@ static void on_init(long param)
     int i;
     FILE* file_level;
 
+    // Level loading
     file_level = fopen("data/level.txt", "r");
 
+    // First: Count number of tiles (lines) in the file
     while (!feof(file_level))
     {
         int c = fgetc(file_level);
 
-        // Count number of tiles (lines) in the file
         if (c == '\n')
         {
             ++tile_count;
         }
     }
 
+    // Allocate memory for the tiles
     tile_list = malloc(sizeof(struct Tile) * tile_count);
 
     fseek(file_level, 0, SEEK_SET);
 
+    // Read tile data
     for (i=0; i<tile_count; ++i)
     {
         int v; // First value of each tile in the .txt is not used
@@ -99,6 +102,7 @@ static void on_init(long param)
 
     fclose(file_level);
 
+    // Load graphics and music
     data.bg = al_load_bitmap("data/bg.tga");
     data.tiles = al_load_bitmap("data/tiles.tga");
     data.tilesred = al_load_bitmap("data/tilesred.tga");
@@ -247,7 +251,7 @@ static void on_update()
                 ++crack_level;
 
                 // scarestate may appear quicker than normal...
-                if (rand() % 20 == 1 && view_x > 1000)
+                if (view_x > 1000 && rand() % 20 == 1)
                 {
                     rush = TRUE;
                 }

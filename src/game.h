@@ -35,7 +35,10 @@ extern ALLEGRO_FONT* font;
 int game_init(struct Game_Config* config, int argc, char** argv);
 void game_run();
 void game_over();
+void game_rest(double msec); // stops and resumes the game timer properly
 void set_bg_color(ALLEGRO_COLOR);
+void stop_game_timer();
+void resume_game_timer();
 
 struct State;
 

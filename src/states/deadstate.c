@@ -64,7 +64,7 @@ static void on_update()
     }
     else
     {
-        al_rest(25.0);
+        game_rest(25.0);
         game_over();
     }
 }
@@ -72,8 +72,9 @@ static void on_update()
 static void on_draw()
 {
     al_draw_tinted_bitmap(data.dead,
-        al_map_rgba_f(1.0 * alpha, 1.0 * alpha, 1.0 * alpha, alpha),
-        0, 0, 0);
+                          al_map_rgba_f(1.0 * alpha, 1.0 * alpha,
+                                        1.0 * alpha, alpha),
+                          0, 0, 0);
 }
 
 struct State* get_dead_state()

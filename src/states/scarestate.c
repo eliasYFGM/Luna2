@@ -21,7 +21,6 @@ static int step_count = 0;
 static void on_init(long param)
 {
     data.image = al_load_bitmap("data/zalgopie.png");
-
     data.noise = al_load_sample("data/noise.wav");
 
     if (data.noise != NULL)
@@ -34,16 +33,10 @@ static void on_init(long param)
 
 static void on_end(int over)
 {
-    if (data.image != NULL)
-    {
-        al_destroy_bitmap(data.image);
-    }
+    al_destroy_bitmap(data.image);
+    al_destroy_sample(data.noise);
 
-    if (data.noise != NULL)
-    {
-        al_destroy_sample(data.noise);
-    }
-
+    // Change the game's background color to dark red
     set_bg_color(al_map_rgb(30, 0, 0));
 }
 
@@ -63,7 +56,7 @@ static void on_update()
 {
     ++step_count;
 
-    if (step_count > default_config->framerate)
+    if (step_count >= default_config->framerate)
     {
         // Back to the game
         pop_state();
@@ -73,9 +66,9 @@ static void on_update()
 static void on_draw()
 {
     al_draw_text(font, C_WHITE, SCREEN_W / 2, SCREEN_H / 2,
-        ALLEGRO_ALIGN_CENTER, "zalgopie.png");
+      ALLEGRO_ALIGN_CENTER, "zalgopie.png");
 
-    if (data.image != NULL)
+    if (data.image)
     {
         al_draw_bitmap(data.image, 0, 0, 0);
     }
