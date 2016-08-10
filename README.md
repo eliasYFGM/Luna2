@@ -4,7 +4,7 @@ This is an open-source remake of the creepypasta game "Luna 2" (or Luna Game 2) 
 ## Compilation
 
 ### Linux
-This is the default target. You need to install Code::Blocks and Allegro 5 development packages in order to compile and build. You can use MinGW32 or MinGW-w64 to target Windows.
+This is the default target. You need to install Code::Blocks and Allegro 5 development packages in order to compile and build. You can use MinGW32 or MinGW-w64 to target Windows too.
 
 ### Windows
 Be sure to have Code::Blocks installed and change the linker options to fit your current configuration. You will need to build Allegro 5 yourself with CMAKE if you don't have the binaries that correspond with your GCC version.
