@@ -11,7 +11,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_primitives.h>
-#include "../game.h"
+#include "../core.h"
 #include "../player.h"
 #include "gamestate.h"
 #include "scarestate.h"
@@ -56,7 +56,7 @@ static int max_width = 0;
 static int creepy = FALSE;
 static int rush = FALSE;
 
-static void on_init(long param)
+static void on_init(void* param)
 {
     int i;
     FILE* file_level;
@@ -228,7 +228,7 @@ static void on_update()
 
     for (i=0; i<tile_count; ++i)
     {
-        if (tile_list[i].x < (view_x + (SCREEN_W + tile_list[i].w))
+        if (tile_list[i].x < (view_x + (GAME_W + tile_list[i].w))
             && tile_list[i].x > (view_x - (tile_list[i].w * 2)))
         {
             vtiles[vtile_count++] = &tile_list[i];
@@ -281,7 +281,7 @@ static void on_update()
     player_get_pos(player, &x, &y);
 
     // Update camera
-    while (view_x > (max_width - SCREEN_W) || x < view_x + 270)
+    while (view_x > (max_width - GAME_W) || x < view_x + 270)
     {
         --view_x;
     }
@@ -320,7 +320,7 @@ static void on_draw()
         int w = al_get_bitmap_width(data.bg);
         int h = al_get_bitmap_height(data.bg);
 
-        for (j=0; j<SCREEN_H; j+=w)
+        for (j=0; j<GAME_H; j+=w)
         {
             for (i=0; i<max_width; i+=h)
             {
@@ -362,7 +362,7 @@ static void on_draw()
 
     player_draw(player);
 
-    al_draw_filled_rectangle(0, 0, SCREEN_W, SCREEN_H,
+    al_draw_filled_rectangle(0, 0, GAME_W, GAME_H,
         al_map_rgba_f(0, 0, 0, alpha));
 }
 

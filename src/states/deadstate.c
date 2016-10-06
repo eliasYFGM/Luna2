@@ -9,7 +9,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_audio.h>
 #include "deadstate.h"
-#include "../game.h"
+#include "../core.h"
 
 static struct // Data
 {
@@ -20,7 +20,7 @@ data;
 
 static float alpha = 0;
 
-static void on_init(long param)
+static void on_init(void* param)
 {
     data.dead = al_load_bitmap("data/dead.tga");
 

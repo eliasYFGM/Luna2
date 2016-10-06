@@ -7,7 +7,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_audio.h>
 #include "scarestate.h"
-#include "../game.h"
+#include "../core.h"
 
 static struct // Data
 {
@@ -18,7 +18,7 @@ data;
 
 static int step_count = 0;
 
-static void on_init(long param)
+static void on_init(void* param)
 {
     data.image = al_load_bitmap("data/zalgopie.png");
     data.noise = al_load_sample("data/noise.wav");
@@ -56,7 +56,7 @@ static void on_update()
 {
     ++step_count;
 
-    if (step_count >= default_config->framerate)
+    if (step_count >= main_config->framerate)
     {
         // Back to the game
         pop_state();
@@ -65,7 +65,7 @@ static void on_update()
 
 static void on_draw()
 {
-    al_draw_text(font, C_WHITE, SCREEN_W / 2, SCREEN_H / 2,
+    al_draw_text(font, C_WHITE, GAME_W / 2, GAME_H / 2,
       ALLEGRO_ALIGN_CENTER, "zalgopie.png");
 
     if (data.image)

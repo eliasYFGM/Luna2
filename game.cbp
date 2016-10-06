@@ -57,10 +57,10 @@
 			<Add option="-fexceptions" />
 			<Add option="-Wno-trigraphs" />
 		</Compiler>
-		<Unit filename="src/game.c">
+		<Unit filename="src/core.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/game.h" />
+		<Unit filename="src/core.h" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>

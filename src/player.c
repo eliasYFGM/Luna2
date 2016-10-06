@@ -6,7 +6,7 @@
 
 #include <allegro5/allegro.h>
 #include "player.h"
-#include "game.h"
+#include "core.h"
 #include "states/gamestate.h"
 #include "states/deadstate.h"
 
