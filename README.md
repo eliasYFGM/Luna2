@@ -1,6 +1,8 @@
 # Luna 2
 This is an open-source remake of the creepypasta game "Luna 2" (or Luna Game 2) in the C language, started as a small tribute to the "Luna Game" series after 5 years of its first release in 2011.
 
+Gameplay is 99% identical to Luna 2. It has improved physics and a few bug-fixes too.
+
 ## Compilation
 
 ### Linux
