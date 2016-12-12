@@ -1,31 +1,31 @@
-#include "core.h"
-#include "states/gamestate.h"
+#include "engine.h"
+#include "states/game_state.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
   // Default configuration that the game will make use of
   struct Game_Config config =
   {
+    // Argument list
+    argc, argv,
     // Window title
-    "Luna",
+    "Luna 2",
     // Display resolution
     640, 480,
     // Framerate (FPS)
     30,
-    // Want full-screen?
+    // Full-screen?
+    FALSE,
+    // Enable audio module?
     TRUE,
-    // Want audio module?
-    TRUE,
-    // Use additional back-buffer? (black bars on full-screen)
-    TRUE,
-    // Argument list
-    { argc, argv }
+    // Additional back-buffer? (black bars on full-screen)
+    TRUE
   };
 
   if (game_init(&config))
   {
-    // Run the game with a default "starting state"
-    game_run(GAME_STATE);
+    // Run the game, with a starting state
+    game_run(Game_State());
   }
 
   return 0;

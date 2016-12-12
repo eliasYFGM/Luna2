@@ -3,8 +3,6 @@
 
 #include "../state.h"
 
-struct State* get_scare_state();
-
-#define SCARE_STATE     get_scare_state()
+struct State* Scare_State(void);
 
 #endif // SCARESTATE_H_INCLUDED

@@ -3,8 +3,6 @@
 
 #include "../state.h"
 
-struct State* get_dead_state();
-
-#define DEAD_STATE  get_dead_state()
+struct State* Dead_State(void);
 
 #endif // DEADSTATE_H_INCLUDED

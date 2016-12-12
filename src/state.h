@@ -1,20 +1,17 @@
 #ifndef STATE_H_INCLUDED
 #define STATE_H_INCLUDED
 
-#include <allegro5/allegro.h>
-
 // Main state structure
 struct State
 {
-  void (*_init)(void*);
-  void (*_end)(int);
+  void (*_end)(int exiting);
 
-  void (*_pause)();
-  void (*_resume)();
+  void (*_pause)(void);
+  void (*_resume)(void);
 
-  void (*_events)(ALLEGRO_EVENT*);
-  void (*_update)();
-  void (*_draw)();
+  void (*_events)(ALLEGRO_EVENT *ev);
+  void (*_update)(void);
+  void (*_draw)(void);
 };
 
 #endif // STATE_H_INCLUDED
