@@ -1,31 +1,29 @@
 #include "engine.h"
-#include "states/game_state.h"
+#include "state_game.h"
 
 int main(int argc, char **argv)
 {
-  // Default configuration that the game will make use of
-  struct Game_Config config =
+  // Default configuration that the engine will make use of
+  struct Engine_Conf conf =
   {
     // Argument list
     argc, argv,
     // Window title
-    "Luna 2",
+    "Allegro application",
     // Display resolution
     640, 480,
     // Framerate (FPS)
     30,
     // Full-screen?
     FALSE,
-    // Enable audio module?
-    TRUE,
     // Additional back-buffer? (black bars on full-screen)
     TRUE
   };
 
-  if (game_init(&config))
+  if (engine_init(&conf))
   {
-    // Run the game, with a starting state
-    game_run(Game_State());
+    // Run with a starting state
+    engine_run(STATE_GAME);
   }
 
   return 0;

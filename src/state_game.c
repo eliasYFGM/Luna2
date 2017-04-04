@@ -1,9 +1,9 @@
-/*
-  gamestate.c
-
-  The main state that controls everything in the game.
-  Does NOT initialize the modules - for that see game.c
-*/
+/**
+  * state_game.c
+  *
+  * The main state that controls everything in the game.
+  * Does NOT initialize the modules - for that see game.c
+  */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,11 +11,11 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_primitives.h>
-#include "../engine.h"
-#include "../player.h"
-#include "game_state.h"
-#include "scare_state.h"
-#include "dead_state.h"
+#include "engine.h"
+#include "player.h"
+#include "state_game.h"
+#include "state_scare.h"
+#include "state_dead.h"
 
 struct Tile *vtiles[500];
 int vtile_count = 0;
@@ -56,7 +56,12 @@ static int max_width = 0;
 static int creepy = FALSE;
 static int rush = FALSE;
 
-static void state_init(void)
+/*******************************************************************************
+  state_init(param) - State initialization
+  Executed ONLY ONCE by: change_state(), push_state()
+*******************************************************************************/
+static void
+state_init(void *param)
 {
   int i;
   FILE *file_level;
@@ -86,13 +91,12 @@ static void state_init(void)
     int v; // First value of each tile in the .txt is not used
 
     fscanf(file_level, "%d %d %d %d %d %f %f\n", &v,
-      &tile_list[i].left,
-      &tile_list[i].top,
-      &tile_list[i].w,
-      &tile_list[i].h,
-      &tile_list[i].x,
-      &tile_list[i].y
-    );
+           &tile_list[i].left,
+           &tile_list[i].top,
+           &tile_list[i].w,
+           &tile_list[i].h,
+           &tile_list[i].x,
+           &tile_list[i].y);
 
     if (tile_list[i].x > max_width)
     {
@@ -125,7 +129,12 @@ static void state_init(void)
   player = create_player(100, 100, &default_keys);
 }
 
-static void state_end(int exiting)
+/*******************************************************************************
+  state_end() - State "shutdown"
+  Executed when [engine_active = FALSE]
+*******************************************************************************/
+static void
+state_end(void)
 {
   al_destroy_bitmap(game.bg);
   al_destroy_bitmap(game.tiles);
@@ -143,11 +152,39 @@ static void state_end(int exiting)
   destroy_player(player);
 }
 
-static void state_pause(void)
+/*******************************************************************************
+  state_enter(param)
+  Executed by: change_state(), push_state()
+*******************************************************************************/
+static void
+state_enter(void *param)
 {
 }
 
-static void state_resume(void)
+/*******************************************************************************
+  state_exit()
+  Executed by: change_state(), pop_state()
+*******************************************************************************/
+static void
+state_exit(void)
+{
+}
+
+/*******************************************************************************
+  state_pause()
+  Executed by: push_state()
+*******************************************************************************/
+static void
+state_pause(void)
+{
+}
+
+/*******************************************************************************
+  state_resume()
+  Executed by: pop_state()
+*******************************************************************************/
+static void
+state_resume(void)
 {
   if (game.music != NULL)
   {
@@ -163,7 +200,12 @@ static void state_resume(void)
   }
 }
 
-static void state_events(ALLEGRO_EVENT *ev)
+/*******************************************************************************
+  state_events(ev)
+  For event handling - keyboard, mouse, joystick, etc.
+*******************************************************************************/
+static void
+state_events(ALLEGRO_EVENT *ev)
 {
   if (ev->type == ALLEGRO_EVENT_KEY_DOWN)
   {
@@ -219,7 +261,12 @@ static void state_events(ALLEGRO_EVENT *ev)
   }
 }
 
-static void state_update(void)
+/*******************************************************************************
+  state_update()
+  Runs every step/frame - for game logic
+*******************************************************************************/
+static void
+state_update(void)
 {
   int i;
 
@@ -249,7 +296,7 @@ static void state_update(void)
       {
         ++crack_level;
 
-        // scarestate may appear quicker than normal...
+        // STATE_SCARE may appear quicker than normal...
         if (view_x > 1000 && rand() % 20 == 1)
         {
           rush = TRUE;
@@ -264,7 +311,7 @@ static void state_update(void)
         al_set_audio_stream_playing(game.music, 0);
       }
 
-      push_state(Scare_State());
+      push_state(STATE_SCARE, NULL);
       crack_level = 14;
       default_keys.left = 0;
       default_keys.right = 0;
@@ -305,12 +352,17 @@ static void state_update(void)
 
     if (alpha >= 1.0)
     {
-      change_state(Dead_State());
+      change_state(STATE_DEAD, NULL);
     }
   }
 }
 
-static void state_draw(void)
+/*******************************************************************************
+  state_draw()
+  For drawing to the screen - huds, sprites, backgrounds, etc.
+*******************************************************************************/
+static void
+state_draw(void)
 {
   int i, j;
 
@@ -365,19 +417,24 @@ static void state_draw(void)
     al_map_rgba_f(0, 0, 0, alpha));
 }
 
-struct State* Game_State(void)
+/*******************************************************************************
+  Definition of the state function
+*******************************************************************************/
+struct State*
+State_Game(void)
 {
   static struct State state =
   {
+    state_init,
     state_end,
+    state_enter,
+    state_exit,
     state_pause,
     state_resume,
     state_events,
     state_update,
     state_draw
   };
-
-  state_init();
 
   return &state;
 }

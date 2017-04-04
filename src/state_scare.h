@@ -1,8 +1,10 @@
 #ifndef SCARESTATE_H_INCLUDED
 #define SCARESTATE_H_INCLUDED
 
-#include "../state.h"
+#include "state.h"
 
-struct State* Scare_State(void);
+struct State* State_Scare(void);
+
+#define STATE_SCARE State_Scare()
 
 #endif // SCARESTATE_H_INCLUDED

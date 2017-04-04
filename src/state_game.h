@@ -1,9 +1,11 @@
 #ifndef GAMESTATE_H_INCLUDED
 #define GAMESTATE_H_INCLUDED
 
-#include "../state.h"
+#include "state.h"
 
-struct State* Game_State(void);
+struct State* State_Game(void);
+
+#define STATE_GAME  State_Game()
 
 struct Tile
 {
@@ -18,7 +20,7 @@ struct Tile
 };
 
 // Tiles that are on-screen (not full list)
-extern struct Tile* vtiles[];
+extern struct Tile *vtiles[];
 
 // How many of them?
 extern int vtile_count;

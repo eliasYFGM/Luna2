@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_audio.h>
@@ -8,12 +10,10 @@
 #include "state.h"
 
 // Globals
-const struct Game_Config *maincfg;
+int engine_active;
 ALLEGRO_FONT *font;
 int keys[ALLEGRO_KEY_MAX];
-
-// The state number that is currently updating
-static int current_state;
+const struct Engine_Conf *mainconf;
 
 static struct // Engine variables
 {
@@ -23,13 +23,20 @@ static struct // Engine variables
   ALLEGRO_EVENT_QUEUE *event_queue;
   ALLEGRO_COLOR bg_color;
   int initialized;
-  int is_running;
-  struct State *states[MAX_STATES];
-}
-engine;
+
+  // Stack of states
+  struct State *states[MAX_STATES * 2];
+
+  // Initialized states
+  struct State *initd_states[MAX_STATES];
+
+} engine;
+
+static int current_state, initd_count;
 
 // Updates the aspect ratio when going full-screen or windowed
-static void aspect_ratio_transform(void)
+static void
+aspect_ratio_transform(void)
 {
   int window_w = al_get_display_width(engine.display);
   int window_h = al_get_display_height(engine.display);
@@ -49,7 +56,7 @@ static void aspect_ratio_transform(void)
   al_use_transform(&trans);
 }
 
-int game_init(struct Game_Config *cfg)
+int engine_init(struct Engine_Conf *conf)
 {
   if (engine.initialized)
   {
@@ -72,21 +79,18 @@ int game_init(struct Game_Config *cfg)
     return 0;
   }
 
-  if (cfg->audio)
+  if (al_install_audio())
   {
-    if (!al_install_audio())
-    {
-      puts("ERROR: Could not initialize audio...");
-      return 0;
-    }
-
     if (!al_init_acodec_addon())
     {
-      puts("ERROR: Could not initialize acodec addon...");
-      return 0;
+      puts("WARNING: Could not initialize audio codecs...");
     }
 
     al_reserve_samples(1);
+  }
+  else
+  {
+    puts("WARNING: Could not initialize audio...");
   }
 
   // Add-ons
@@ -99,13 +103,13 @@ int game_init(struct Game_Config *cfg)
   al_init_font_addon();
   al_init_primitives_addon();
 
-  if (cfg->fullscreen)
+  if (conf->fullscreen)
   {
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
   }
 
   // Initialize variables...
-  engine.display = al_create_display(cfg->width, cfg->height);
+  engine.display = al_create_display(conf->width, conf->height);
 
   if (!engine.display)
   {
@@ -113,42 +117,44 @@ int game_init(struct Game_Config *cfg)
     return 0;
   }
 
-  al_set_window_title(engine.display, cfg->title);
+  al_set_window_title(engine.display, conf->title);
 
-  maincfg = cfg;
+  mainconf = conf;
   aspect_ratio_transform();
 
   al_add_new_bitmap_flag(ALLEGRO_MAG_LINEAR);
 
-  if (cfg->buffer)
+  if (conf->buffer)
   {
-    engine.buffer = al_create_bitmap(cfg->width, cfg->height);
+    engine.buffer = al_create_bitmap(conf->width, conf->height);
     al_set_new_bitmap_flags(0);
   }
 
   font = al_create_builtin_font();
 
-  engine.timer = al_create_timer(1.0 / cfg->framerate);
+  engine.timer = al_create_timer(1.0 / conf->framerate);
   engine.event_queue = al_create_event_queue();
 
-  set_bg_color(BG_COLOR_DEFAULT);
+  set_bg_color(al_map_rgb(192, 192, 192));
+
+  srand(time(NULL));
 
   engine.initialized = TRUE;
 
   return 1;
 }
 
-void game_run(struct State *first)
+void engine_run(struct State *s)
 {
   int redraw = 0;
 
-  if (engine.is_running)
+  if (engine_active)
   {
     puts("WARNING: Calling game_run() more than once");
     return;
   }
 
-  change_state(first);
+  change_state(s, NULL);
 
   // Generate display events
   al_register_event_source(engine.event_queue,
@@ -164,11 +170,10 @@ void game_run(struct State *first)
   // Mouse events
   al_register_event_source(engine.event_queue, al_get_mouse_event_source());
 
-  al_start_timer(engine.timer);
-  engine.is_running = TRUE;
+  engine_active = TRUE;
 
   // Main game loop
-  while (engine.is_running)
+  while (engine_active)
   {
     ALLEGRO_EVENT event;
     al_wait_for_event(engine.event_queue, &event);
@@ -179,7 +184,7 @@ void game_run(struct State *first)
     // If the close button was pressed...
     if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
     {
-      engine.is_running = FALSE;
+      engine_active = FALSE;
       break;
     }
     else if (event.type == ALLEGRO_EVENT_KEY_DOWN)
@@ -189,7 +194,7 @@ void game_run(struct State *first)
       // Escape key will end the game
       if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
       {
-        engine.is_running = FALSE;
+        engine_active = FALSE;
         break;
       }
 
@@ -222,11 +227,11 @@ void game_run(struct State *first)
       redraw = TRUE;
     }
 
-    if (redraw && al_event_queue_is_empty(engine.event_queue))
+    if (redraw && al_is_event_queue_empty(engine.event_queue))
     {
       redraw = FALSE;
 
-      if (maincfg->buffer)
+      if (mainconf->buffer)
       {
         al_set_target_bitmap(engine.buffer);
       }
@@ -239,7 +244,7 @@ void game_run(struct State *first)
 
       engine.states[current_state]->_draw();
 
-      if (maincfg->buffer)
+      if (mainconf->buffer)
       {
         al_set_target_backbuffer(engine.display);
         al_clear_to_color(C_BLACK);
@@ -250,9 +255,9 @@ void game_run(struct State *first)
     }
   }
 
-  while (current_state >= 0)
+  while (initd_count > 0)
   {
-    engine.states[current_state--]->_end(TRUE);
+    engine.initd_states[--initd_count]->_end();
   }
 
   al_destroy_display(engine.display);
@@ -260,36 +265,78 @@ void game_run(struct State *first)
   al_destroy_event_queue(engine.event_queue);
   al_destroy_font(font);
 
-  if (maincfg->buffer)
+  if (mainconf->buffer)
   {
     al_destroy_bitmap(engine.buffer);
   }
 }
 
-void change_state(struct State *s)
+void change_state(struct State *s, void *param)
 {
-  if (engine.states[current_state] != NULL)
+  al_stop_timer(engine.timer);
+
+  if (!s->initd)
   {
-    engine.states[current_state]->_end(FALSE);
+    if (initd_count < MAX_STATES - 1)
+    {
+      s->_init(param);
+      s->initd = TRUE;
+      engine.initd_states[initd_count++] = s;
+    }
+    else
+    {
+      puts("WARNING: Cannot initialize another state (reached MAX_STATES)");
+      al_start_timer(engine.timer);
+      return;
+    }
   }
 
+  if (engine.states[current_state] != NULL)
+  {
+    engine.states[current_state]->_exit();
+  }
+
+  s->_enter(param);
   engine.states[current_state] = s;
+
+  al_start_timer(engine.timer);
 }
 
-void push_state(struct State *s)
+void push_state(struct State *s, void *param)
 {
-  if (current_state < (MAX_STATES - 1))
+  if (current_state < (MAX_STATES * 2) - 1)
   {
+    al_stop_timer(engine.timer);
+
+    if (!s->initd)
+    {
+      if (initd_count < MAX_STATES - 1)
+      {
+        s->_init(param);
+        s->initd = TRUE;
+        engine.initd_states[initd_count++] = s;
+      }
+      else
+      {
+        puts("WARNING: Cannot initialize another state (reached MAX_STATES)");
+        al_start_timer(engine.timer);
+        return;
+      }
+    }
+
     if (engine.states[current_state] != NULL)
     {
       engine.states[current_state]->_pause();
     }
 
+    s->_enter(param);
     engine.states[++current_state] = s;
+
+    al_start_timer(engine.timer);
   }
   else
   {
-    puts("WARNING: Can't add new state (current_state = MAX_STATES)");
+    puts("WARNING: Couldn't add a new state (state stack is full)");
   }
 }
 
@@ -297,18 +344,13 @@ void pop_state(void)
 {
   if (current_state > 0)
   {
-    engine.states[current_state]->_end(FALSE);
+    engine.states[current_state]->_exit();
     engine.states[--current_state]->_resume();
   }
   else
   {
     puts("WARNING: Can't remove any more states (current_state = 0)");
   }
-}
-
-void game_over(void)
-{
-  engine.is_running = FALSE;
 }
 
 void set_bg_color(ALLEGRO_COLOR c)

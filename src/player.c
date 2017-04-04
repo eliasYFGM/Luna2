@@ -1,14 +1,14 @@
-/*
-  player.c
-
-  Controls the player's behavior and animation
-*/
+/**
+  * player.c
+  *
+  * Controls the player's behavior and animation
+  */
 
 #include <allegro5/allegro.h>
 #include "player.h"
 #include "engine.h"
-#include "states/game_state.h"
-#include "states/dead_state.h"
+#include "state_game.h"
+#include "state_dead.h"
 
 struct Player
 {

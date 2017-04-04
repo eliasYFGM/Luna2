@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="game" />
+		<Option title="Luna2" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -72,18 +72,18 @@
 			<Option target="Release-mingw" />
 		</Unit>
 		<Unit filename="src/state.h" />
-		<Unit filename="src/states/dead_state.c">
+		<Unit filename="src/state_dead.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/states/dead_state.h" />
-		<Unit filename="src/states/game_state.c">
+		<Unit filename="src/state_dead.h" />
+		<Unit filename="src/state_game.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/states/game_state.h" />
-		<Unit filename="src/states/scare_state.c">
+		<Unit filename="src/state_game.h" />
+		<Unit filename="src/state_scare.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/states/scare_state.h" />
+		<Unit filename="src/state_scare.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
