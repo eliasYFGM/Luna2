@@ -9,14 +9,14 @@ struct State* State_Game(void);
 
 struct Tile
 {
-    // Position in the tileset
-    int left, top;
+  // Position in the tileset
+  int left, top;
 
-    // With and height
-    int w, h;
+  // With and height
+  int w, h;
 
-    // Position in-game
-    float x, y;
+  // Position in-game
+  float x, y;
 };
 
 // Tiles that are on-screen (not full list)

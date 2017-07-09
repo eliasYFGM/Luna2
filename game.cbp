@@ -19,7 +19,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="game" prefix_auto="1" extension_auto="1" />
+				<Option output="Luna2" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
